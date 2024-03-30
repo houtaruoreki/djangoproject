@@ -4,7 +4,17 @@ from .models import Animal
 from .serializers import AnimalSerializer
 
 
-# Create your views here.
+class AnimalView(APIView):
+    @staticmethod
+    def get(request, pk):
+        try:
+            animal = Animal.objects.get(pk=pk)
+            serializer = AnimalSerializer(animal, context={'request': request}, many=False)
+            return Response(serializer.data, status=200)
+        except Animal.DoesNotExist:
+            return Response('Animal does not exist', status=404)
+
+
 class AnimalListView(APIView):
     @staticmethod
     def get(request):
